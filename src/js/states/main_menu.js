@@ -66,7 +66,7 @@ export class MainMenuState extends GameState {
                 <img src="${cachebust(
                     G_CHINA_VERSION ? "res/logo_cn.png" : "res/logo.png"
                 )}" alt="shapez.io Logo">
-                <span class="updateLabel">v${G_BUILD_VERSION}</span>
+                <span class="updateLabel">v${G_BUILD_VERSION} - Achievements!</span>
             </div>
 
             <div class="mainWrapper ${showDemoBadges ? "demo" : "noDemo"}">
@@ -108,6 +108,7 @@ export class MainMenuState extends GameState {
 
                     ${G_CHINA_VERSION ? "" : `<a class="helpTranslate">${T.mainMenu.helpTranslate}</a>`}
                 </div>
+
 
                 <div class="author">${T.mainMenu.madeBy.replace(
                     "<author-link>",
@@ -244,7 +245,10 @@ export class MainMenuState extends GameState {
         const discordLink = this.htmlElement.querySelector(".discordLink");
         this.trackClicks(
             discordLink,
-            () => this.app.platformWrapper.openExternalLink(THIRDPARTY_URLS.discord),
+            () => {
+                this.app.analytics.trackUiClick("main_menu_link_discord");
+                this.app.platformWrapper.openExternalLink(THIRDPARTY_URLS.discord);
+            },
             { preventClick: true }
         );
 
@@ -252,17 +256,18 @@ export class MainMenuState extends GameState {
         if (githubLink) {
             this.trackClicks(
                 githubLink,
-                () => this.app.platformWrapper.openExternalLink(THIRDPARTY_URLS.github),
+                () => {
+                    this.app.analytics.trackUiClick("main_menu_link_github");
+                    this.app.platformWrapper.openExternalLink(THIRDPARTY_URLS.github);
+                },
                 { preventClick: true }
             );
         }
 
         const producerLink = this.htmlElement.querySelector(".producerLink");
-        this.trackClicks(
-            producerLink,
-            () => this.app.platformWrapper.openExternalLink("https://tobspr.com"),
-            { preventClick: true }
-        );
+        this.trackClicks(producerLink, () => this.app.platformWrapper.openExternalLink("https://tobspr.io"), {
+            preventClick: true,
+        });
     }
 
     renderMainMenu() {
